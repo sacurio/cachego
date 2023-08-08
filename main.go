@@ -17,7 +17,8 @@ type (
 		Username string
 	}
 	Server struct {
-		db map[int]*User
+		db    map[int]*User
+		dbhit int
 	}
 )
 
@@ -41,10 +42,12 @@ func (s *Server) handleGetUser(w http.ResponseWriter, r *http.Request) {
 	// handle error after
 	id, _ := strconv.Atoi(idStr)
 
+	// hit the database
 	user, ok := s.db[id]
 	if !ok {
 		panic(ErrUserNotFound)
 	}
+	s.dbhit++
 
 	json.NewEncoder(w).Encode(user)
 }
