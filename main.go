@@ -7,6 +7,10 @@ import (
 	"strconv"
 )
 
+const (
+	ErrUserNotFound = "user not found"
+)
+
 type (
 	User struct {
 		ID       int
@@ -32,3 +36,19 @@ func NewServer() *Server {
 	}
 }
 
+func (s *Server) handleGetUser(w http.ResponseWriter, r *http.Request) {
+	idStr := r.URL.Query().Get("id")
+	// handle error after
+	id, _ := strconv.Atoi(idStr)
+
+	user, ok := s.db[id]
+	if !ok {
+		panic(ErrUserNotFound)
+	}
+
+	json.NewEncoder(w).Encode(user)
+}
+
+func main() {
+
+}
