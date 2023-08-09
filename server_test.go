@@ -11,11 +11,12 @@ import (
 func TestHandleGetUser(t *testing.T) {
 	s := NewServer()
 	ts := httptest.NewServer(http.HandlerFunc(s.handleGetUser))
-	nreq := 100
+	nreq := 1000
 
 	for i := 0; i < nreq; i++ {
 		id := i%100 + 1
 		url := fmt.Sprintf("%s/?id=%d", ts.URL, id)
+		fmt.Println("URL", url)
 		resp, err := http.Get(url)
 		if err != nil {
 			t.Error(err)
@@ -27,6 +28,6 @@ func TestHandleGetUser(t *testing.T) {
 		}
 
 		fmt.Printf("%+v\n", user)
-		fmt.Println("times we hit the database:", s.dbhit)
 	}
+	fmt.Println("times we hit the database:", s.dbhit)
 }
